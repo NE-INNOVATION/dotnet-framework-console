@@ -1,0 +1,25 @@
+name: .NET
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-2019
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Login to Podman
+      id: login
+      run:  |
+         docker login quay.io -u ${{ secrets.docker_username }} -p ${{ secrets.docker_password }}
+    - name: Build Image using Podman
+      run: |
+         docker build . -t quay.io/neinnovationorg/dotnet-frmwrk-console:master
+    - name: Push Image to Github Registry
+      run: |
+          docker push quay.io/neinnovationorg/dotnet-frmwrk-console:master
